@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LoL-UI · Kit de componentes Hextech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lol-ui.css">
+<style>
+  html, body { margin: 0; min-height: 100%; }
+  body { background: radial-gradient(ellipse at top, #0a1a2e 0%, #010A13 60%) fixed; }
+  .doc { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  .doc-nav {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 0;
+    border-right: 1px solid var(--lol-gold-7); background: rgba(1,10,19,.7);
+  }
+  .doc-nav .brand { padding: 0 20px 18px; border-bottom: 1px solid var(--lol-gold-7); margin-bottom: 10px; }
+  .doc-nav a {
+    display: block; padding: 7px 20px; font-family: var(--lol-font-display); font-weight: 700; font-size: 12px;
+    letter-spacing: .075em; text-transform: uppercase; color: var(--lol-grey-1); text-decoration: none;
+    border-left: 2px solid transparent; transition: all .15s;
+  }
+  .doc-nav a:hover { color: var(--lol-gold-1); border-left-color: var(--lol-gold-3); background: rgba(200,170,110,.06); }
+  .doc-main { padding: 40px clamp(20px, 4vw, 56px) 120px; max-width: 1100px; }
+  .doc-section { margin-bottom: 56px; scroll-margin-top: 20px; }
+  .doc-section > .lol-h3 { margin-bottom: 6px; }
+  .doc-section > .lol-text { margin: 0 0 18px; max-width: 70ch; }
+  .demo { border: 1px solid var(--lol-gold-7); background: rgba(1,10,19,.55); margin-bottom: 16px; }
+  .demo__head { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--lol-gold-7); }
+  .demo__head .lol-h6 { color: var(--lol-gold-3); }
+  .demo__preview { padding: 26px 22px; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+  .demo__preview.col { flex-direction: column; align-items: stretch; }
+  .demo__code { display: none; margin: 0; padding: 14px; max-height: 320px; overflow: auto; border-top: 1px solid var(--lol-gold-7); background: #00050a; color: var(--lol-blue-2); font: 12px/1.55 ui-monospace, Menlo, Consolas, monospace; white-space: pre; }
+  .demo.show-code .demo__code { display: block; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; width: 100%; }
+  .swatch { border: 1px solid var(--lol-gold-7); cursor: pointer; background: var(--lol-black); }
+  .swatch div { height: 54px; }
+  .swatch p { margin: 0; padding: 6px 8px; font-size: 11px; line-height: 15px; color: var(--lol-grey-1); }
+  .swatch p b { display: block; color: var(--lol-gold-1); font-weight: 600; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; width: 100%; }
+  .field { min-width: 220px; flex: 1; }
+  .intro { margin-bottom: 48px; padding-bottom: 28px; border-bottom: 1px solid var(--lol-gold-7); }
+  .intro .lol-text-lg { max-width: 64ch; margin-top: 12px; }
+  @media (max-width: 760px) { .doc { grid-template-columns: 1fr; } .doc-nav { display: none; } .lol-keybind-row { grid-template-columns: 1fr 1fr; } .lol-keybind-row > :last-child { display: none; } }
+</style>
+</head>
+<body class="lol-root">
+<div class="doc">
+  <nav class="doc-nav">
+    <div class="brand"><div class="lol-h5">LoL-UI</div><div class="lol-text-sm">Kit Hextech v1.0</div></div>
+    <a href="#colores">Colores</a><a href="#tipografia">Tipografía</a><a href="#botones">Botones</a>
+    <a href="#seleccion">Checkbox · Radio · Toggle</a><a href="#sliders">Sliders</a><a href="#inputs">Inputs y labels</a>
+    <a href="#selects">Desplegables</a><a href="#keybinds">Keybinds</a><a href="#tabs">Tabs</a>
+    <a href="#paneles">Paneles y cards</a><a href="#progreso">Progreso y carga</a><a href="#badges">Badges y avatares</a>
+    <a href="#listas">Listas y tablas</a><a href="#feedback">Tooltip · Modal · Toast</a>
+  </nav>
+
+  <main class="doc-main">
+    <header class="intro">
+      <div class="lol-h6 lol-text-gold" style="margin-bottom:10px">Kit de componentes</div>
+      <h1 class="lol-h1">Interfaz Hextech</h1>
+      <p class="lol-text-lg">Todos los componentes usan solo <span class="lol-text-gold">lol-ui.css</span> y <span class="lol-text-gold">lol-ui.js</span>, sin dependencias. Pulsa <span class="lol-kbd">&lt;/&gt;</span> en cualquier bloque para ver el HTML y copiarlo. Haz clic en un color para copiar su variable.</p>
+    </header>
+
+    <!-- COLORES -->
+    <section class="doc-section" id="colores">
+      <h2 class="lol-h3">Colores</h2>
+      <p class="lol-text">Paleta oficial del cliente expuesta como variables CSS (<span class="lol-text-gold">--lol-gold-1</span> … <span class="lol-text-gold">--lol-black</span>).</p>
+      <div class="demo"><div class="demo__preview" id="swatches"></div></div>
+    </section>
+
+    <!-- TIPOGRAFÍA -->
+    <section class="doc-section" id="tipografia">
+      <h2 class="lol-h3">Tipografía</h2>
+      <p class="lol-text">Títulos en Beaufort (sustituto: Cinzel) y texto en Spiegel (sustituto: Inter). Si tienes las fuentes originales instaladas, se usan automáticamente.</p>
+      <div class="demo" data-demo="Escala tipográfica"><div class="demo__preview col" style="gap:14px">
+        <h1 class="lol-h1">Header 1 · Grieta</h1>
+        <h2 class="lol-h2">Header 2 · Invocador</h2>
+        <h3 class="lol-h3">Header 3 · Clasificatoria</h3>
+        <h4 class="lol-h4">Header 4 · Campeones</h4>
+        <div class="lol-h4-italic">Header 4 Italic · "La victoria es nuestra"</div>
+        <h5 class="lol-h5">Header 5 · Configuración</h5>
+        <div class="lol-h5-title">Header 5 Titlecase · Selección de Runas</div>
+        <h6 class="lol-h6">Header 6 · Etiqueta</h6>
+        <p class="lol-text-lg" style="margin:0">Large Text — Texto destacado para descripciones de campeón.</p>
+        <p class="lol-text" style="margin:0">Medium Text — Texto general de interfaz, párrafos y descripciones.</p>
+        <p class="lol-text-sm" style="margin:0">Small Text — Notas, metadatos, ayudas contextuales.</p>
+        <div><a class="lol-link">Gold Link · Ver historial de partidas</a></div>
+      </div></div>
+    </section>
+
+    <!-- BOTONES -->
+    <section class="doc-section" id="botones">
+      <h2 class="lol-h3">Botones</h2>
+      <p class="lol-text">Borde con degradado dorado, brillo interno al pasar el ratón y estado presionado más oscuro.</p>
+      <div class="demo" data-demo="Variantes"><div class="demo__preview">
+        <button class="lol-btn">Secundario</button>
+        <button class="lol-btn lol-btn--primary">Aceptar</button>
+        <button class="lol-btn lol-btn--danger">Rechazar</button>
+        <button class="lol-btn lol-btn--ghost">Fantasma</button>
+        <button class="lol-btn" disabled>Deshabilitado</button>
+      </div></div>
+      <div class="demo" data-demo="Tamaños y grupo"><div class="demo__preview">
+        <button class="lol-btn lol-btn--sm">Pequeño</button>
+        <button class="lol-btn">Normal</button>
+        <button class="lol-btn lol-btn--lg">Grande</button>
+        <div class="lol-btn-group"><button class="lol-btn lol-btn--sm">Normal</button><button class="lol-btn lol-btn--sm">Clasificatoria</button><button class="lol-btn lol-btn--sm">ARAM</button></div>
+      </div></div>
+      <div class="demo" data-demo="Jugar, icono y cerrar"><div class="demo__preview">
+        <button class="lol-btn-play">Jugar</button>
+        <button class="lol-icon-btn" aria-label="Ajustes" data-lol-tooltip="Abrir configuración"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        <button class="lol-icon-btn lol-icon-btn--round" aria-label="Amigos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button>
+        <button class="lol-close" aria-label="Cerrar"></button>
+        <button class="lol-btn lol-btn--block" style="max-width:280px">Ancho completo</button>
+      </div></div>
+    </section>
+
+    <!-- SELECCIÓN -->
+    <section class="doc-section" id="seleccion">
+      <h2 class="lol-h3">Checkbox · Radio · Toggle</h2>
+      <p class="lol-text">Inputs nativos ocultos (accesibles con teclado) con apariencia personalizada.</p>
+      <div class="demo" data-demo="Checkbox"><div class="demo__preview">
+        <label class="lol-check"><input type="checkbox" checked><span class="lol-check__box"></span>Mostrar barras de vida</label>
+        <label class="lol-check"><input type="checkbox"><span class="lol-check__box"></span>Cámara bloqueada</label>
+        <label class="lol-check"><input type="checkbox" class="js-indeterminate"><span class="lol-check__box"></span>Indeterminado</label>
+        <label class="lol-check"><input type="checkbox" disabled><span class="lol-check__box"></span>Deshabilitado</label>
+      </div></div>
+      <div class="demo" data-demo="Radio (rombo)"><div class="demo__preview">
+        <label class="lol-radio"><input type="radio" name="pos" checked><span class="lol-radio__box"></span>Superior</label>
+        <label class="lol-radio"><input type="radio" name="pos"><span class="lol-radio__box"></span>Jungla</label>
+        <label class="lol-radio"><input type="radio" name="pos"><span class="lol-radio__box"></span>Medio</label>
+        <label class="lol-radio"><input type="radio" name="pos"><span class="lol-radio__box"></span>Inferior</label>
+        <label class="lol-radio"><input type="radio" name="pos"><span class="lol-radio__box"></span>Soporte</label>
+      </div></div>
+      <div class="demo" data-demo="Toggle"><div class="demo__preview">
+        <label class="lol-toggle"><input type="checkbox" checked><span class="lol-toggle__track"></span>Overlay activo</label>
+        <label class="lol-toggle"><input type="checkbox"><span class="lol-toggle__track"></span>Modo streamer</label>
+        <label class="lol-toggle"><input type="checkbox" disabled><span class="lol-toggle__track"></span>Deshabilitado</label>
+      </div></div>
+    </section>
+
+    <!-- SLIDERS -->
+    <section class="doc-section" id="sliders">
+      <h2 class="lol-h3">Sliders</h2>
+      <p class="lol-text">Pista dorada que se rellena y control en forma de rombo. Usa <span class="lol-text-gold">data-suffix</span> para la unidad.</p>
+      <div class="demo" data-demo="Sliders"><div class="demo__preview col" style="max-width:520px">
+        <div><label class="lol-label">Volumen general</label>
+          <div class="lol-slider"><input class="lol-range" type="range" min="0" max="100" value="70" data-suffix="%"><span class="lol-slider__value"></span></div></div>
+        <div><label class="lol-label">Sensibilidad del ratón</label>
+          <div class="lol-slider"><input class="lol-range" type="range" min="1" max="100" value="35"><span class="lol-slider__value"></span></div></div>
+        <div><label class="lol-label">Opacidad del overlay</label>
+          <div class="lol-slider"><input class="lol-range" type="range" min="0" max="1" step="0.05" value="0.8"><span class="lol-slider__value"></span></div></div>
+        <div><label class="lol-label">Deshabilitado</label>
+          <div class="lol-slider"><input class="lol-range" type="range" value="40" disabled><span class="lol-slider__value"></span></div></div>
+      </div></div>
+    </section>
+
+    <!-- INPUTS -->
+    <section class="doc-section" id="inputs">
+      <h2 class="lol-h3">Inputs y labels</h2>
+      <p class="lol-text">Campos de texto, búsqueda, área de texto, números y estados de error.</p>
+      <div class="demo" data-demo="Campos"><div class="demo__preview">
+        <div class="field"><label class="lol-label" for="i1">Nombre de invocador</label><input id="i1" class="lol-input" placeholder="Nombre#TAG"><span class="lol-hint">Incluye tu Riot ID completo.</span></div>
+        <div class="field"><label class="lol-label" for="i2">Buscar campeón</label><div class="lol-input-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="i2" class="lol-input" placeholder="Buscar…"></div></div>
+        <div class="field"><label class="lol-label" for="i3">Región</label><input id="i3" class="lol-input is-error" value="XX"><span class="lol-hint is-error">Región no válida.</span></div>
+      </div></div>
+      <div class="demo" data-demo="Textarea, número y nativo"><div class="demo__preview">
+        <div class="field"><label class="lol-label" for="i4">Notas de la partida</label><textarea id="i4" class="lol-textarea" placeholder="Escribe aquí…"></textarea></div>
+        <div><label class="lol-label">FPS máximo</label><div class="lol-stepper"><button type="button" aria-label="Menos">−</button><input type="number" value="144" min="30" max="240" step="10"><button type="button" aria-label="Más">+</button></div></div>
+        <div class="field" style="max-width:220px"><label class="lol-label" for="i5">Select nativo</label><select id="i5" class="lol-select-native"><option>LAS</option><option>LAN</option><option>BR</option><option>NA</option><option>EUW</option></select></div>
+        <div class="field" style="max-width:220px"><label class="lol-label" for="i6">Deshabilitado</label><input id="i6" class="lol-input" value="No editable" disabled></div>
+      </div></div>
+    </section>
+
+    <!-- SELECTS -->
+    <section class="doc-section" id="selects">
+      <h2 class="lol-h3">Desplegables</h2>
+      <p class="lol-text">Select personalizado con teclado (↑ ↓ Enter Esc). Emite el evento <span class="lol-text-gold">lol:change</span>.</p>
+      <div class="demo" data-demo="Select personalizado"><div class="demo__preview">
+        <div><label class="lol-label">Modo de juego</label>
+          <div class="lol-select" data-value="ranked">
+            <button type="button" class="lol-select__trigger" aria-haspopup="listbox" aria-expanded="false"><span>Clasificatoria Solo/Dúo</span></button>
+            <ul class="lol-select__menu" role="listbox">
+              <li class="lol-select__option" data-value="normal">Normal (selección)</li>
+              <li class="lol-select__option" data-value="ranked" aria-selected="true">Clasificatoria Solo/Dúo</li>
+              <li class="lol-select__option" data-value="flex">Clasificatoria Flexible</li>
+              <li class="lol-select__option" data-value="aram">ARAM</li>
+              <li class="lol-select__option" data-value="arena">Arena</li>
+            </ul>
+          </div></div>
+        <div><label class="lol-label">Resolución</label>
+          <div class="lol-select">
+            <button type="button" class="lol-select__trigger" aria-haspopup="listbox" aria-expanded="false"><span>1920 × 1080</span></button>
+            <ul class="lol-select__menu" role="listbox">
+              <li class="lol-select__option">1280 × 720</li><li class="lol-select__option">1600 × 900</li>
+              <li class="lol-select__option" aria-selected="true">1920 × 1080</li><li class="lol-select__option">2560 × 1440</li>
+            </ul>
+          </div></div>
+        <div><label class="lol-label">Vista</label>
+          <div class="lol-segmented"><button aria-pressed="true">Lista</button><button aria-pressed="false">Cuadrícula</button><button aria-pressed="false">Compacto</button></div></div>
+      </div></div>
+    </section>
+
+    <!-- KEYBINDS -->
+    <section class="doc-section" id="keybinds">
+      <h2 class="lol-h3">Keybinds</h2>
+      <p class="lol-text">Haz clic en una caja y pulsa una tecla, combinación (Ctrl/Alt/Shift + tecla) o botón del ratón. <span class="lol-kbd">Esc</span> cancela, <span class="lol-kbd">Retroceso</span> borra. Las teclas repetidas se marcan en rojo. Emite <span class="lol-text-gold">lol:keybind</span> con <span class="lol-text-gold">{ action, key }</span>.</p>
+      <div class="demo" data-demo="Tabla de atajos"><div class="demo__preview col" style="padding:14px">
+        <div class="lol-panel lol-panel--plain" style="padding:0">
+          <div class="lol-keybind-row" style="background:var(--lol-grey-4)"><span class="lol-h6 lol-text-gold">Acción</span><span class="lol-h6 lol-text-gold">Principal</span><span class="lol-h6 lol-text-gold">Alternativa</span></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Habilidad 1</span><button class="lol-keybind" data-action="q" data-key="Q"></button><button class="lol-keybind" data-action="q-alt"></button></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Habilidad 2</span><button class="lol-keybind" data-action="w" data-key="W"></button><button class="lol-keybind" data-action="w-alt"></button></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Habilidad 3</span><button class="lol-keybind" data-action="e" data-key="E"></button><button class="lol-keybind" data-action="e-alt"></button></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Definitiva</span><button class="lol-keybind" data-action="r" data-key="R"></button><button class="lol-keybind" data-action="r-alt"></button></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Mostrar overlay</span><button class="lol-keybind" data-action="overlay" data-key="Ctrl + Tab"></button><button class="lol-keybind" data-action="overlay-alt"></button></div>
+          <div class="lol-keybind-row"><span class="lol-keybind-row__name">Captura de pantalla</span><button class="lol-keybind" data-action="shot" data-key="F12"></button><button class="lol-keybind" data-action="shot-alt"></button></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="lol-text-sm">Teclas sueltas:</span><span class="lol-kbd">Q</span><span class="lol-kbd">W</span><span class="lol-kbd">Ctrl</span>+<span class="lol-kbd">1</span><span class="lol-kbd">Espacio</span></div>
+      </div></div>
+    </section>
+
+    <!-- TABS -->
+    <section class="doc-section" id="tabs">
+      <h2 class="lol-h3">Tabs</h2>
+      <p class="lol-text">Navegación con subrayado dorado animado y flechas ← → del teclado.</p>
+      <div class="demo" data-demo="Tabs"><div class="demo__preview col">
+        <div class="lol-tabs" role="tablist">
+          <button class="lol-tab" role="tab" aria-selected="true" aria-controls="tp1">General</button>
+          <button class="lol-tab" role="tab" aria-selected="false" aria-controls="tp2" tabindex="-1">Video</button>
+          <button class="lol-tab" role="tab" aria-selected="false" aria-controls="tp3" tabindex="-1">Sonido</button>
+          <button class="lol-tab" role="tab" aria-selected="false" aria-controls="tp4" tabindex="-1">Atajos</button>
+        </div>
+        <div id="tp1" class="lol-tabpanel lol-text" role="tabpanel">Opciones generales de la aplicación.</div>
+        <div id="tp2" class="lol-tabpanel lol-text" role="tabpanel" hidden>Resolución, calidad y límite de FPS.</div>
+        <div id="tp3" class="lol-tabpanel lol-text" role="tabpanel" hidden>Volumen de música, efectos y voces.</div>
+        <div id="tp4" class="lol-tabpanel lol-text" role="tabpanel" hidden>Personaliza tus atajos de teclado.</div>
+      </div></div>
+    </section>
+
+    <!-- PANELES -->
+    <section class="doc-section" id="paneles">
+      <h2 class="lol-h3">Paneles y cards</h2>
+      <p class="lol-text">Contenedores para agrupar opciones, ventanas y elementos seleccionables.</p>
+      <div class="demo" data-demo="Paneles"><div class="demo__preview"><div class="grid-2">
+        <div class="lol-panel lol-panel--ornate"><div class="lol-panel__title">Panel ornamentado</div><p class="lol-text" style="margin:0">Borde dorado con degradado y rombo superior.</p></div>
+        <div class="lol-panel lol-panel--plain"><div class="lol-panel__title">Panel simple</div><p class="lol-text" style="margin:0">Borde fino, ideal para secciones internas.</p></div>
+        <div class="lol-frame"><div class="lol-h5" style="margin-bottom:8px">Marco con esquinas</div><p class="lol-text" style="margin:0">Detalle en esquinas opuestas.</p></div>
+      </div></div></div>
+      <div class="demo" data-demo="Cards seleccionables"><div class="demo__preview"><div class="grid-2" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))">
+        <div class="lol-card is-selected"><div class="lol-card__media"></div><div class="lol-card__body"><div class="lol-card__title">Ahri</div><div class="lol-card__sub">Maga · Medio</div></div></div>
+        <div class="lol-card"><div class="lol-card__media" style="background:linear-gradient(135deg,#32281E,#010A13)"></div><div class="lol-card__body"><div class="lol-card__title">Garen</div><div class="lol-card__sub">Luchador · Superior</div></div></div>
+        <div class="lol-card"><div class="lol-card__media" style="background:linear-gradient(135deg,#3d1a2b,#010A13)"></div><div class="lol-card__body"><div class="lol-card__title">Jinx</div><div class="lol-card__sub">Tiradora · Inferior</div></div></div>
+      </div></div></div>
+      <div class="demo" data-demo="Divisores"><div class="demo__preview col">
+        <div class="lol-divider">Sección</div>
+        <div class="lol-divider lol-divider--diamond"><span></span></div>
+      </div></div>
+    </section>
+
+    <!-- PROGRESO -->
+    <section class="doc-section" id="progreso">
+      <h2 class="lol-h3">Progreso y carga</h2>
+      <p class="lol-text">Controla el valor con la variable <span class="lol-text-gold">--val</span>.</p>
+      <div class="demo" data-demo="Barras"><div class="demo__preview col" style="max-width:520px">
+        <div><label class="lol-label">Descarga · 40%</label><div class="lol-progress" style="--val:40%"></div></div>
+        <div><label class="lol-label">Cola · 75%</label><div class="lol-progress lol-progress--blue" style="--val:75%"></div></div>
+        <div><label class="lol-label">Experiencia</label><div class="lol-progress lol-progress--xp" style="--val:62%"></div></div>
+        <div style="display:grid;gap:4px"><div class="lol-progress lol-progress--hp" style="--val:85%;height:12px"></div><div class="lol-progress lol-progress--mana" style="--val:50%;height:8px"></div></div>
+      </div></div>
+      <div class="demo" data-demo="Spinners y temporizador"><div class="demo__preview">
+        <div class="lol-spinner"></div>
+        <div class="lol-spinner lol-spinner--blue"></div>
+        <div class="lol-ring" id="ring" style="--val:100"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="28"/><circle class="fg" cx="32" cy="32" r="28"/></svg><span>10</span></div>
+        <button class="lol-btn lol-btn--sm" id="ringBtn">Iniciar cuenta</button>
+      </div></div>
+    </section>
+
+    <!-- BADGES -->
+    <section class="doc-section" id="badges">
+      <h2 class="lol-h3">Badges y avatares</h2>
+      <p class="lol-text">Etiquetas de estado e iconos de perfil con aro dorado y nivel.</p>
+      <div class="demo" data-demo="Badges"><div class="demo__preview">
+        <span class="lol-badge">Nuevo</span>
+        <span class="lol-badge lol-badge--blue lol-badge--dot">En partida</span>
+        <span class="lol-badge lol-badge--green lol-badge--dot">Conectado</span>
+        <span class="lol-badge lol-badge--red">Derrota</span>
+        <span class="lol-badge lol-badge--blue">Victoria</span>
+      </div></div>
+      <div class="demo" data-demo="Avatares"><div class="demo__preview" style="gap:28px">
+        <div class="lol-avatar"><div>DI</div><span class="lol-avatar__level">142</span></div>
+        <div class="lol-avatar lol-avatar--online" style="--size:44px"><div>KR</div></div>
+        <div class="lol-avatar" style="--size:72px"><div>RS</div><span class="lol-avatar__level">87</span></div>
+        <div class="lol-avatar lol-avatar--square" style="--size:48px"><div>Q</div></div>
+      </div></div>
+    </section>
+
+    <!-- LISTAS -->
+    <section class="doc-section" id="listas">
+      <h2 class="lol-h3">Listas y tablas</h2>
+      <p class="lol-text">Para amigos, historial de partidas, estadísticas o inventario.</p>
+      <div class="demo" data-demo="Lista"><div class="demo__preview col">
+        <ul class="lol-list">
+          <li class="lol-list__item is-active"><div class="lol-avatar lol-avatar--online" style="--size:34px"><div style="font-size:11px">AN</div></div><div><div class="lol-list__title">Andrés#LAS</div><div class="lol-list__meta">En selección de campeón</div></div><span class="lol-list__end lol-badge lol-badge--blue">Invitar</span></li>
+          <li class="lol-list__item"><div class="lol-avatar" style="--size:34px"><div style="font-size:11px">MA</div></div><div><div class="lol-list__title">Mara#7777</div><div class="lol-list__meta">Desconectada · hace 2 h</div></div></li>
+          <li class="lol-list__item"><div class="lol-avatar lol-avatar--online" style="--size:34px"><div style="font-size:11px">TO</div></div><div><div class="lol-list__title">Tomi#ARG</div><div class="lol-list__meta">Disponible</div></div></li>
+        </ul>
+      </div></div>
+      <div class="demo" data-demo="Tabla"><div class="demo__preview col">
+        <table class="lol-table">
+          <thead><tr><th>Campeón</th><th>Resultado</th><th>KDA</th><th>Oro</th><th>Duración</th></tr></thead>
+          <tbody>
+            <tr><td class="lol-text-gold">Ahri</td><td><span class="lol-badge lol-badge--blue">Victoria</span></td><td>9 / 2 / 11</td><td>14.2k</td><td>31:05</td></tr>
+            <tr><td class="lol-text-gold">Garen</td><td><span class="lol-badge lol-badge--red">Derrota</span></td><td>3 / 6 / 4</td><td>9.8k</td><td>27:40</td></tr>
+            <tr><td class="lol-text-gold">Jinx</td><td><span class="lol-badge lol-badge--blue">Victoria</span></td><td>12 / 3 / 7</td><td>16.1k</td><td>35:12</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section class="doc-section" id="feedback">
+      <h2 class="lol-h3">Tooltip · Modal · Toast</h2>
+      <p class="lol-text">Tooltips con <span class="lol-text-gold">data-lol-tooltip</span>, modales con <span class="lol-text-gold">data-lol-open</span> y notificaciones con <span class="lol-text-gold">LolUI.toast({…})</span>.</p>
+      <div class="demo" data-demo="Tooltip"><div class="demo__preview">
+        <button class="lol-btn" data-lol-tooltip-title="Destello" data-lol-tooltip="Teletransporta a tu campeón una distancia corta hacia la ubicación del cursor.">Pasa el ratón</button>
+        <span class="lol-kbd" data-lol-tooltip="Atajo para abrir la tienda" tabindex="0">P</span>
+      </div></div>
+      <div class="demo" data-demo="Modal"><div class="demo__preview">
+        <button class="lol-btn lol-btn--primary" data-lol-open="modal1">Abrir modal</button>
+        <div class="lol-modal-backdrop" id="modal1">
+          <div class="lol-modal" role="dialog" aria-modal="true" aria-labelledby="m1t">
+            <button class="lol-close" data-lol-close aria-label="Cerrar"></button>
+            <div class="lol-ring" style="--val:100;margin:0 auto 14px"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="28"/><circle class="fg" cx="32" cy="32" r="28"/></svg><span>✓</span></div>
+            <h3 class="lol-modal__title" id="m1t">¡Partida encontrada!</h3>
+            <p class="lol-modal__body">Clasificatoria Solo/Dúo · Grieta del Invocador</p>
+            <div class="lol-modal__actions"><button class="lol-btn lol-btn--primary" data-lol-close>Aceptar</button><button class="lol-btn" data-lol-close>Rechazar</button></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="demo" data-demo="Toast"><div class="demo__preview">
+        <button class="lol-btn" onclick="LolUI.toast({title:'Ajustes guardados',message:'Tus atajos se aplicaron correctamente.',type:'success'})">Éxito</button>
+        <button class="lol-btn" onclick="LolUI.toast({title:'Partida en curso',message:'Andrés#LAS entró en partida.',type:'info'})">Info</button>
+        <button class="lol-btn lol-btn--danger" onclick="LolUI.toast({title:'Error de conexión',message:'No se pudo conectar con el cliente.',type:'error'})">Error</button>
+      </div></div>
+    </section>
+  </main>
+</div>
+
+<script src="lol-ui.js"></script>
+<script>
+(function () {
+  // Muestras de color
+  var groups = [
+    ["gold", ["#F0E6D2","#CDBE91","#C8AA6E","#C89B3C","#785A28","#463714","#32281E"]],
+    ["blue", ["#CDFAFA","#B2D9DB","#0AC8B9","#0A96AA","#005A82","#0A323C","#0A142B"]],
+    ["grey", ["#A09B8C","#5B5A56","#3C3C41","#1E2328"]]
+  ];
+  var extra = [["grey-cool","#1E282D"],["black","#010A13"],["yellow","#FABE0A"],["red","#BE1E37"],["red-2","#FF2345"],["green","#1E815A"],["green-2","#00A741"],["xp","#643C5A"]];
+  var wrap = document.getElementById("swatches");
+  var grid = document.createElement("div"); grid.className = "swatches";
+  function add(name, hex) {
+    var s = document.createElement("div"); s.className = "swatch"; s.tabIndex = 0;
+    s.setAttribute("data-lol-tooltip", "Clic para copiar var(--lol-" + name + ")");
+    s.innerHTML = '<div style="background:' + hex + '"></div><p><b>--lol-' + name + '</b>' + hex + '</p>';
+    s.addEventListener("click", function () {
+      var txt = "var(--lol-" + name + ")";
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () {
+        LolUI.toast({ title: "Copiado", message: txt, duration: 1800 });
+      }, function () { LolUI.toast({ title: "Variable", message: txt + " · " + hex, duration: 2500 }); });
+    });
+    grid.appendChild(s);
+  }
+  groups.forEach(function (g) { g[1].forEach(function (h, i) { add(g[0] + "-" + (i + 1), h); }); });
+  extra.forEach(function (e) { add(e[0], e[1]); });
+  wrap.appendChild(grid);
+
+  document.querySelectorAll(".js-indeterminate").forEach(function (c) { c.indeterminate = true; });
+
+  // Cabecera de cada demo + vista de código
+  function clean(html) {
+    var lines = html.replace(/^\n+|\s+$/g, "").split("\n");
+    var ind = Math.min.apply(null, lines.filter(function (l) { return l.trim(); }).map(function (l) { return l.match(/^\s*/)[0].length; }));
+    return lines.map(function (l) { return l.slice(ind); }).join("\n");
+  }
+  document.querySelectorAll(".demo[data-demo]").forEach(function (d) {
+    var prev = d.querySelector(".demo__preview");
+    var src = clean(prev.innerHTML);
+    var head = document.createElement("div"); head.className = "demo__head";
+    head.innerHTML = '<span class="lol-h6"></span><div style="display:flex;gap:6px"><button class="lol-btn lol-btn--sm lol-btn--ghost js-code">&lt;/&gt; Código</button><button class="lol-btn lol-btn--sm lol-btn--ghost js-copy">Copiar</button></div>';
+    head.querySelector(".lol-h6").textContent = d.getAttribute("data-demo");
+    var pre = document.createElement("pre"); pre.className = "demo__code"; pre.textContent = src;
+    d.insertBefore(head, prev); d.appendChild(pre);
+    head.querySelector(".js-code").onclick = function () { d.classList.toggle("show-code"); };
+    head.querySelector(".js-copy").onclick = function () {
+      var p = navigator.clipboard ? navigator.clipboard.writeText(src) : Promise.reject();
+      p.then(function () { LolUI.toast({ title: "HTML copiado", message: d.getAttribute("data-demo"), type: "success", duration: 1800 }); },
+             function () { d.classList.add("show-code"); LolUI.toast({ title: "Selecciona el código", message: "El portapapeles no está disponible aquí.", duration: 2500 }); });
+    };
+  });
+  LolUI.init();
+
+  // Temporizador circular
+  var timer;
+  document.getElementById("ringBtn").onclick = function () {
+    var ring = document.getElementById("ring"), n = 10; clearInterval(timer);
+    ring.style.setProperty("--val", 100); ring.querySelector("span").textContent = n;
+    timer = setInterval(function () {
+      n--; ring.style.setProperty("--val", n * 10); ring.querySelector("span").textContent = n;
+      if (n <= 0) { clearInterval(timer); LolUI.toast({ title: "Tiempo agotado", message: "La cola se ha cancelado.", type: "error" }); }
+    }, 1000);
+  };
+
+  // Ejemplo de evento de keybind
+  document.addEventListener("lol:keybind", function (e) {
+    LolUI.toast({ title: "Atajo actualizado", message: e.detail.action + " → " + (e.detail.key || "sin asignar"), type: "info", duration: 2000 });
+  });
+})();
+</script>
+</body>
+</html>
