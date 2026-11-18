@@ -76,16 +76,21 @@
      <button class="lol-keybind" data-action="ability-q" data-key="Q"></button>
      Click → escucha. Esc cancela. Retroceso/Supr borra. Detecta modificadores y conflictos.
      Emite "lol:keybind" con { action, key }.                                            */
-  var KEY_NAMES = { " ": "Espacio", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Control: "Ctrl", Escape: "Esc", Enter: "Enter", Tab: "Tab", CapsLock: "Bloq Mayús" };
-  var MOUSE_NAMES = { 0: "Clic izq.", 1: "Clic central", 2: "Clic der.", 3: "Mouse 4", 4: "Mouse 5" };
+  var KEY_BASE = { ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Control: "Ctrl", Escape: "Esc", Enter: "Enter", Tab: "Tab" };
+  var I18N = {
+    en: { unassigned: "Unassigned", pressKey: "Press a key…", keys: { " ": "Space", CapsLock: "Caps Lock" }, mouse: { 0: "Left click", 1: "Middle click", 2: "Right click" } },
+    es: { unassigned: "Sin asignar", pressKey: "Presiona una tecla…", keys: { " ": "Espacio", CapsLock: "Bloq Mayús" }, mouse: { 0: "Clic izq.", 1: "Clic central", 2: "Clic der." } }
+  };
+  var LANG = document.documentElement.getAttribute("lang") === "es" ? "es" : "en";
+  function strings() { return I18N[LANG]; }
   function keyLabel(e) {
-    var k = KEY_NAMES[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
-    return k;
+    return strings().keys[e.key] || KEY_BASE[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
   }
+  function mouseLabel(b) { return strings().mouse[b] || "Mouse " + (b + 1); }
   function renderKeybind(btn) {
     var k = btn.dataset.key;
     btn.classList.toggle("is-empty", !k);
-    btn.textContent = k || "Sin asignar";
+    btn.textContent = k || strings().unassigned;
   }
   function checkConflicts(root) {
     var all = Array.prototype.slice.call(root.querySelectorAll(".lol-keybind"));
@@ -123,12 +128,12 @@
       function onMouse(e) {
         if (e.target === btn && e.button === 0) return; // el clic que activó
         if (e.target !== btn) return stop(false);
-        e.preventDefault(); stop(true, MOUSE_NAMES[e.button] || "Mouse " + e.button);
+        e.preventDefault(); stop(true, mouseLabel(e.button));
       }
       btn.addEventListener("click", function () {
         if (listening) return;
         listening = true; btn.classList.add("is-listening"); btn.classList.remove("is-empty");
-        btn.textContent = "Presiona una tecla…";
+        btn.textContent = strings().pressKey;
         setTimeout(function () {
           window.addEventListener("keydown", onKey, true);
           window.addEventListener("mousedown", onMouse, true);
@@ -235,13 +240,20 @@
     return t;
   }
 
+  function setLang(l) {
+    LANG = l === "es" ? "es" : "en";
+    document.querySelectorAll(".lol-keybind").forEach(function (b) {
+      if (!b.classList.contains("is-listening")) renderKeybind(b);
+    });
+  }
+
   function init(root) {
     root = root || document;
     initSliders(root); initSteppers(root); initSelects(root); initKeybinds(root);
     initTabs(root); initSegmented(root); initTooltips(root); initModals(root);
   }
 
-  global.LolUI = { init: init, toast: toast, openModal: openModal, closeModal: closeModal };
+  global.LolUI = { init: init, toast: toast, openModal: openModal, closeModal: closeModal, setLang: setLang };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { init(); });
   else init();
 })(window);
